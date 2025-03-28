@@ -50,8 +50,8 @@ MySQL: Install XAMPP for MySQL and Apache, or use your preferred MySQL setup.
 1. Clone the Repository
 Clone the repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/myapi.git
-cd myapi
+git clone https://github.com/yourusername/simpleAPI.git
+cd simpleAPI
 ```
 2. Install Dependencies
 Run the following command to install the necessary dependencies:
