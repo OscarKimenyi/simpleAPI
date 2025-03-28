@@ -68,7 +68,7 @@ If you wish to use a real database, create tables for students and subjects or s
 4. Running the Application
 To run the application locally:
 ```bash
-node index.js
+node server.js
 ```
 The API will be accessible at http://localhost:3000.
 
