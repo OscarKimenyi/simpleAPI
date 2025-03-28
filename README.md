@@ -24,9 +24,9 @@ This endpoint returns a list of at least 10 students with their name and enrolle
 #### Example Response:
 ```json
 [
-  { "name": "Oscar Kimenyi", "program": "Bsc Software Engineering" },
-  { "name": "Hussein Makame", "program": "Bsc Software Engineering" },
-  ...
+  { "id":1, "first_name": "Josi",  "last_name": "Bolton","course": "Computer Science" },
+  { "id":2, "first_name": "Gaston",  "last_name": "Salliere","course": "Software Engineering" },
+...
 ]
 ```
 
@@ -35,10 +35,9 @@ This endpoint returns a list of subjects for the Software Engineering program, c
 ### Example Response:
 ```json
   [
-    {"id":1,"name":"Principles of Programming Languages(CP 111)","year":1},
-    {"id":2,"name":"Development Perspectives(DS 102)","year":1}
-    {"id":3,"name":"Mathematical Foundations of Information Security-(IA 112)","year":1},
-    {"id":4,"name":"Introduction to Information Technology(IT 111)", "year":1},
+    {"id":1,"course_name":"Introduction to Computer Science","year":1},
+    {"id":2,"course_name":"Programming Fundamentals","year":1}
+    {"id":3,"course_name":"Discrete Mathematics","year":1},
     ...
   ]
 ```
