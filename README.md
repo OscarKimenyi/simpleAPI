@@ -20,8 +20,8 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 ## API Endpoints
 
 ### 1. `/students`
-This endpoint returns a list of at least 10 students with their name and enrolled program.
-#### Example Response:
+This endpoint returns a list of students with their name and enrolled program.
+#### Example of a Response:
 ```json
 [
   { "id":1, "first_name": "Josi",  "last_name": "Bolton","course": "Computer Science" },
@@ -29,10 +29,11 @@ This endpoint returns a list of at least 10 students with their name and enrolle
 ...
 ]
 ```
+The /students endpoint can be accessed through [13.60.255.70/students](http://13.60.255.70/students)
 
 ### 2. /subjects
 This endpoint returns a list of subjects for the Software Engineering program, categorized by academic year.
-### Example Response:
+### Example of a Response:
 ```json
   [
     {"id":1,"course_name":"Introduction to Computer Science","year":1},
@@ -41,11 +42,13 @@ This endpoint returns a list of subjects for the Software Engineering program, c
     ...
   ]
 ```
+The /subjects endpoint can be accessed through [13.60.255.70/subjects](http://13.60.255.70/subjects)
+
 ### Setup Instructions
 ### Prerequisites:
 Node.js: Install Node.js if you haven't already.
 
-MySQL: Install XAMPP for MySQL and Apache, or use your preferred MySQL setup.
+MySQL: Install XAMPP for MySQL and Apache or Nginx, or use your preferred MySQL setup.
 
 1. Clone the Repository
 Clone the repository to your local machine:
