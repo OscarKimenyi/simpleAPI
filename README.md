@@ -24,8 +24,8 @@ This endpoint returns a list of at least 10 students with their name and enrolle
 #### Example Response:
 ```json
 [
-  { "name": "Oscar Kimenyi", "program": "Software Engineering" },
-  { "name": "Hussein Makame", "program": "Software Engineering" },
+  { "name": "Oscar Kimenyi", "program": "Bsc Software Engineering" },
+  { "name": "Hussein Makame", "program": "Bsc Software Engineering" },
   ...
 ]
 ```
