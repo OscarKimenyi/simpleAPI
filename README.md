@@ -14,6 +14,8 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [Prerequisites](#prerequisties)
 - [Endpoints](#endpoints)
 - [License](#license)
+- [Understanding Backup Schemes](understanding-backup-schemes)
+- 
 
 ---
 
@@ -73,9 +75,12 @@ To run the application locally:
 ```bash
 node server.js
 ```
+---
+
 ## Understanding Backup Schemes
 A backup is a copy of data that is made to protect against data loss. It’s a way to make sure that if something goes wrong—like a system crash, accidental deletion, hardware failure, or a cyberattack—you can restore your important files, systems, or databases.
 ### The following are the common backup schemes.
+
 #### 1. Full Backup.
 A full backup involves the creation of a complete copy of an organization’s files, folders, SaaS data and hard drives. Essentially, all the data is backed up into a single version and moved to a storage device. It’s the perfect protection against data loss when you factor in recovery speed and simplicity. However, the time and expense required to copy all the data (all the time) may make it an undesirable option for many IT professionals.
 
@@ -114,6 +119,117 @@ Differential backup falls between full backup and incremental backup. It involve
 - Takes more space than incremental backup.
 
 - Grows larger each day until the next full backup.
+---
+
+##  bash_scripts Overview
+
+This folder contains three Bash scripts used for monitoring, backing up, and updating the server hosting this API.
+
+### 1. `health_check.sh`
+
+- **Purpose**: Monitors the server’s health and verifies API functionality.
+- **Checks performed**
+  - CPU usage
+  - Memory usage
+  - Disk usage
+  - Status of Nginx web server
+  - Availability of `/students` and `/subjects` endpoints using `curl`
+- **Logs to**: `/var/log/server_health.log`
+- **Warnings** are recorded if:
+  - Nginx is inactive
+  - API endpoints return non-200 status
+  - Disk usage is ≥ 90%
+    
+
+### 2. `backup_api.sh`
+
+- **Purpose**: Creates a backup of:
+  - The Node.js API project directory (`/var/www/my_node_api`)
+  - If using a database (e.g., MySQL, PostgreSQL), export the database to /home/ubuntu/backups/db_backup_$(date +%F).sql.
+- **Backup location**: `/home/ubuntu/backups/`
+- **Format**
+  - API files: `api_backup_YYYY-MM-DD.tar.gz`
+  - Database: `mongo_backup_YYYY-MM-DD/`
+- **Old backups (older than 7 days)** are deleted automatically.
+- **Logs to**: `/var/log/backup.log`
+
+
+### 3. `update_server.sh`
+
+- **Purpose**
+  - Updates Ubuntu packages
+  - Pulls the latest code from GitHub
+  - Restarts the Nginx web server
+- **Logs to**: `/var/log/update.log`
+- If `git pull` fails, the script logs the error and aborts without restarting the server.
+
+---
+
+##  Setup Instructions
+
+1. **Upload the scripts to your EC2 instance**
+   ```bash
+   scp bash_scripts/*.sh ubuntu@<your-server-ip>:/home/ubuntu/
+   ```
+2. **Set executable permissions**
+   ```bash
+   chmod +x /home/ubuntu/health_check.sh
+   chmod +x /home/ubuntu/backup_api.sh
+   chmod +x /home/ubuntu/update_server.sh
+   ```
+3. **Run scripts manually for testing**
+    ```bash
+    ./health_check.sh
+   ./backup_api.sh
+    ./update_server.sh
+    
+    ```
+4. **Schedule scripts via cron**
+   ```bash
+    crontab -e
+
+   ```
+   Add the following lines
+    ```bash
+    # Health check every 6 hours
+    0 */6 * * * /home/ubuntu/health_check.sh
+    
+    # Daily backup at 2 AM
+    0 2 * * * /home/ubuntu/backup_api.sh
+    
+    # Update server every 3 days at 3 AM
+    0 3 */3 * * * /home/ubuntu/update_server.sh
+
+   ```
+---
+
+## Dependencies
+Make sure the following tools are installed on your server:
+
+- curl – for endpoint checking
+  ```bash
+  sudo apt install curl
+  
+  ```
+- git – for pulling the latest code
+  ```bash
+  sudo apt install git
+
+  ```
+- mongodump – if you're using MongoDB
+   ```bash
+  sudo apt install mongodb-clients
+
+  ```
+- tar – for file backups
+  ```bash
+  sudo apt install tar
+  ```
+- nginx – the web server
+  ```bash
+  sudo apt install nginx
+  ```
+---
 
 ### License
 This project is licensed under the MIT License - see the LICENSE file for details.   
