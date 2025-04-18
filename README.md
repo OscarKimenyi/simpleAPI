@@ -13,10 +13,10 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [Setup Instructions](#setup-instructions)
 - [Prerequisites](#prerequisties)
 - [Endpoints](#endpoints)
-- [License](#license)
 - [Understanding Backup Schemes](understanding-backup-schemes)
 - [bash_scripts Overview](bash-scripts-overview)
 - [Dependencies](dependencies)
+- [License](#license)
 
 ---
 
