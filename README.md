@@ -15,7 +15,8 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [Endpoints](#endpoints)
 - [License](#license)
 - [Understanding Backup Schemes](understanding-backup-schemes)
-- 
+- [bash_scripts Overview](bash-scripts-overview)
+- [Dependencies](dependencies)
 
 ---
 
