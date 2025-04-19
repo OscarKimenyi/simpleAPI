@@ -1,17 +1,43 @@
 #!/bin/bash
 
-LOG_FILE="/var/log/server_health.log"
+# Create log file if it doesn't exist
+LOG_FILE="/var/log/backup.log"
+touch $LOG_FILE
+
+# Get current timestamp
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 
-CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
-MEMORY=$(free -m | awk '/Mem:/ {print ($3/$2)*100}')
-DISK=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
-NGINX_STATUS=$(systemctl is-active nginx)
-API1=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/students)
-API2=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/subjects)
+# Function to log messages
+log_message() {
+    echo "[$TIMESTAMP] $1" >> $LOG_FILE
+}
 
-echo "$TIMESTAMP - CPU: $CPU%, Memory: $MEMORY%, Disk: $DISK%, Nginx: $NGINX_STATUS, /students: $API1, /subjects: $API2" >> $LOG_FILE
+# Create backups directory if it doesn't exist
+BACKUP_DIR="/home/ubuntu/backups"
+mkdir -p $BACKUP_DIR
 
-if (( $(echo "$DISK > 90" | bc -l) )) || [[ "$API1" -ne 200 ]] || [[ "$API2" -ne 200 ]] || [[ "$NGINX_STATUS" != "active" ]]; then
-  echo "$TIMESTAMP - WARNING: Resource issue or API endpoint failed." >> $LOG_FILE
+# Backup API files
+API_DIR="/home/ubuntu/SimpleAPI"  # Change this to your actual API directory
+BACKUP_FILE="$BACKUP_DIR/api_backup_$(date +%F).tar.gz"
+
+if tar -czf $BACKUP_FILE $API_DIR 2>/dev/null; then
+    log_message "API backup created successfully: $BACKUP_FILE"
+else
+    log_message "ERROR: Failed to create API backup"
+    exit 1
 fi
+
+# Backup database (MySQL example - modify for your database)
+DB_BACKUP_FILE="$BACKUP_DIR/db_backup_$(date +%F).sql"
+
+if mysqldump -u username -ppassword database_name > $DB_BACKUP_FILE 2>/dev/null; then
+    log_message "Database backup created successfully: $DB_BACKUP_FILE"
+else
+    log_message "WARNING: Failed to create database backup"
+fi
+
+# Delete backups older than 7 days
+find $BACKUP_DIR -type f -name "*.tar.gz" -mtime +7 -delete
+find $BACKUP_DIR -type f -name "*.sql" -mtime +7 -delete
+
+log_message "Backup process completed"
