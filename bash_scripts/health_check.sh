@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create log file if it doesn't exist
-LOG_FILE="/var/log/backup.log"
+LOG_FILE="/var/log/server_health.log"
 touch $LOG_FILE
 
 # Get current timestamp
@@ -12,32 +12,41 @@ log_message() {
     echo "[$TIMESTAMP] $1" >> $LOG_FILE
 }
 
-# Create backups directory if it doesn't exist
-BACKUP_DIR="/home/ubuntu/backups"
-mkdir -p $BACKUP_DIR
+# Check CPU usage
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+log_message "CPU Usage: $CPU_USAGE%"
 
-# Backup API files
-API_DIR="/home/ubuntu/SimpleAPI"  # Change this to your actual API directory
-BACKUP_FILE="$BACKUP_DIR/api_backup_$(date +%F).tar.gz"
+# Check Memory usage
+MEM_USAGE=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
+log_message "Memory Usage: $MEM_USAGE%"
 
-if tar -czf $BACKUP_FILE $API_DIR 2>/dev/null; then
-    log_message "API backup created successfully: $BACKUP_FILE"
-else
-    log_message "ERROR: Failed to create API backup"
-    exit 1
+# Check Disk space
+DISK_USAGE=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
+log_message "Disk Usage: $DISK_USAGE%"
+
+# Check if disk space is critical
+if [ $DISK_USAGE -gt 90 ]; then
+    log_message "WARNING: Disk space is critically low!"
 fi
 
-# Backup database (MySQL example - modify for your database)
-DB_BACKUP_FILE="$BACKUP_DIR/db_backup_$(date +%F).sql"
-
-if mysqldump -u username -ppassword database_name > $DB_BACKUP_FILE 2>/dev/null; then
-    log_message "Database backup created successfully: $DB_BACKUP_FILE"
+# Check if web server is running (checking for either Apache or Nginx)
+if pgrep "apache2" >/dev/null 2>&1 || pgrep "nginx" >/dev/null 2>&1; then
+    log_message "Web server is running"
 else
-    log_message "WARNING: Failed to create database backup"
+    log_message "ERROR: Web server is not running!"
 fi
 
-# Delete backups older than 7 days
-find $BACKUP_DIR -type f -name "*.tar.gz" -mtime +7 -delete
-find $BACKUP_DIR -type f -name "*.sql" -mtime +7 -delete
+# Check API endpoints
+API_BASE="http://localhost"  # Change this if your API runs on a different URL
+ENDPOINTS=("/students" "/subjects")
 
-log_message "Backup process completed"
+for endpoint in "${ENDPOINTS[@]}"; do
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$API_BASE$endpoint")
+    if [ "$HTTP_CODE" -eq 200 ]; then
+        log_message "API endpoint $endpoint is working (HTTP 200)"
+    else
+        log_message "WARNING: API endpoint $endpoint returned HTTP $HTTP_CODE"
+    fi
+done
+
+log_message "Health check completed"
