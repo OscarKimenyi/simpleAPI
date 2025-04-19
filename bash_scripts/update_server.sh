@@ -33,7 +33,9 @@ fi
 # Pull latest API changes from GitHub
 API_DIR="/home/ubuntu/simpleAPI"  # Change this to your actual API directory
 log_message "Pulling latest changes from GitHub..."
-cd $API_DIR
+cd $API_DIR || { log_message "ERROR: API directory not found"; exit 1; }
+git fetch origin >> $LOG_FILE 2>&1
+git reset --hard origin/main >> $LOG_FILE 2>&1
 if git pull >> $LOG_FILE 2>&1; then
     log_message "Git pull successful"
 else
