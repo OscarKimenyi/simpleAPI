@@ -232,5 +232,99 @@ Make sure the following tools are installed on your server:
   ```
 ---
 
-### License
+# Simple API with Docker and MySQL
+
+This project demonstrates how to containerize a simple Node.js API using Docker and Docker Compose. It exposes two endpoints:
+
+- `/students`
+- `/subjects`
+
+## 🐳 Docker Setup
+
+### 1. Build Docker Image
+
+```bash
+docker build -t simple-api .
+```
+### 2. Run the Container
+
+```bash
+docker run -d -p 5000:5000 --name  assign-api assign-api
+```
+Then visit:
+
+http://localhost:5000/students
+
+http://localhost:5000/subjects
+
+## ⚙️ Docker Compose (API + MySQL)
+
+### 1. Start with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+This will:
+
+- Start a MySQL database container (db)
+
+- Start the Node.js API container (api)
+
+- Setup volumes for data persistence
+
+### 2. Visit Endpoints
+http://localhost:5000/students
+
+http://localhost:5000/subjects
+
+## ☁️ Deployment on AWS EC2
+
+### 1. Launch an EC2 Ubuntu instance.
+
+### 2. SSH into your instance:
+
+```bash
+ssh -i kim.pem ubuntu@51.20.34.197
+```
+
+### 3. Install Docker and Docker Compose:
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo usermod -aG docker ubuntu
+```
+### 4. Clone this repo and run:
+```bash
+git clone https://github.com/OscarKimenyi/simpleAPI.git
+cd simpleAPI
+docker-compose up --build -d
+```
+
+### 5. Open security group ports:
+
+- TCP 5000 (your app)
+
+- TCP 3306 (if you want DB exposed—optional)
+
+## 🐙 Docker Hub
+The Docker image is available on Docker Hub:
+-link required
+
+```bash
+docker pull oscar1210/assign-api
+docker run -p 5000:5000 oscar1210/assign-api
+```
+
+## 🐞 Troubleshooting Tips
+- Make sure MySQL has finished starting before the API attempts to connect.
+
+- Use docker logs to check container logs:
+
+```bash
+docker logs assign-api
+```
+- Use docker exec -it mysql-db bash and mysql -u root -p to access the MySQL container.
+
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.   
