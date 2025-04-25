@@ -7,12 +7,24 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Allows JSON requests
 
-// Database connection
+// // Database connection
+// const db = mysql.createConnection({
+//     host: 'host.docker.internal',
+//     user: 'root',
+//     password: '',  // Default MySQL password (leave empty)
+//     database: 'cs421'
+// });
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST || 'localhost',
+//     user: process.env.DB_USER || 'root',
+//     password: process.env.DB_PASS || '',
+//     database: process.env.DB_NAME || 'cs421'    
+// });
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',  // Default MySQL password (leave empty)
-    database: 'cs421'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || '',
+    database: process.env.DB_NAME || 'cs421'
 });
 
 db.connect(err => {
