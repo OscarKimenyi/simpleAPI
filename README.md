@@ -13,9 +13,10 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [Setup Instructions](#setup-instructions)
 - [Prerequisites](#prerequisties)
 - [Endpoints](#endpoints)
-- [Understanding Backup Schemes](understanding-backup-schemes)
-- [bash_scripts Overview](bash-scripts-overview)
-- [Dependencies](dependencies)
+- [Understanding Backup Schemes](#understanding-backup-schemes)
+- [bash_scripts Overview](#bash-scripts-overview)
+- [Dependencies](#dependencies)
+- [Simple API with Docker and MySQL](#simple-api-with-docker-and-mysql)
 - [License](#license)
 
 ---
@@ -32,7 +33,7 @@ This endpoint returns a list of students with their name and enrolled program.
 ...
 ]
 ```
-The /students endpoint can be accessed through [13.60.255.70/students](http://13.60.255.70/students)
+The /students endpoint can be accessed through [51.20.34.197/students](http://51.20.34.197/students)
 
 ### 2. /subjects
 This endpoint returns a list of subjects for the Software Engineering program, categorized by academic year.
@@ -45,7 +46,7 @@ This endpoint returns a list of subjects for the Software Engineering program, c
     ...
   ]
 ```
-The /subjects endpoint can be accessed through [13.60.255.70/subjects](http://13.60.255.70/subjects)
+The /subjects endpoint can be accessed through [51.20.34.197/subjects](http://51.20.34.197/subjects)
 
 ### Setup Instructions
 ### Prerequisites:
@@ -244,12 +245,12 @@ This project demonstrates how to containerize a simple Node.js API using Docker 
 ### 1. Build Docker Image
 
 ```bash
-docker build -t simple-api .
+docker build -t assig-api .
 ```
 ### 2. Run the Container
 
 ```bash
-docker run -d -p 5000:5000 --name  assign-api assign-api
+docker run -d -p 5000:5000 --name  old-assign-api old-assign-api
 ```
 Then visit:
 
@@ -308,13 +309,44 @@ docker-compose up --build -d
 - TCP 3306 (if you want DB exposed—optional)
 
 ## 🐙 Docker Hub
-The Docker image is available on Docker Hub:
--link required
+
+### 1. Create account to Docker Hub (https://hub.docker.com/)
+
+### 2. Login to Docker Hub
+
+### 3. Tag your Image
+
+- You can tag your local image with your Docker Hub username.
+
+```bash
+docker tag assign-api oscar1210/assign-api
+```
+- OR If you want to tag it with a version (recommended), do this instead
+
+```bash
+docker tag assign-api oscar1210/assign-api:latest
+```
+
+### 4. Push the image to Docker Hub
+
+```bash
+docker push oscar1210/assign-api
+```
+- Or with version:
+
+```bash
+docker push oscar1210/assign-api:latest
+```
+### 5. To pull and run
 
 ```bash
 docker pull oscar1210/assign-api
 docker run -p 5000:5000 oscar1210/assign-api
 ```
+
+- The Docker image is available on Docker Hub:
+
+[Click here to view/download the Docker image](https://hub.docker.com/r/oscar1210/assign-api)
 
 ## 🐞 Troubleshooting Tips
 - Make sure MySQL has finished starting before the API attempts to connect.
