@@ -32,7 +32,7 @@ This endpoint returns a list of students with their name and enrolled program.
 ...
 ]
 ```
-The /students endpoint can be accessed through [13.60.255.70/students](http://13.60.255.70/students)
+The /students endpoint can be accessed through [51.20.34.197/students](http://51.20.34.197/students)
 
 ### 2. /subjects
 This endpoint returns a list of subjects for the Software Engineering program, categorized by academic year.
@@ -45,7 +45,7 @@ This endpoint returns a list of subjects for the Software Engineering program, c
     ...
   ]
 ```
-The /subjects endpoint can be accessed through [13.60.255.70/subjects](http://13.60.255.70/subjects)
+The /subjects endpoint can be accessed through [51.20.34.197/subjects](http://51.20.34.197/subjects)
 
 ### Setup Instructions
 ### Prerequisites:
@@ -244,12 +244,12 @@ This project demonstrates how to containerize a simple Node.js API using Docker 
 ### 1. Build Docker Image
 
 ```bash
-docker build -t simple-api .
+docker build -t assig-api .
 ```
 ### 2. Run the Container
 
 ```bash
-docker run -d -p 5000:5000 --name  assign-api assign-api
+docker run -d -p 5000:5000 --name  old-assign-api old-assign-api
 ```
 Then visit:
 
