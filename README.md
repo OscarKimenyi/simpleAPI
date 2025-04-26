@@ -13,9 +13,10 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [Setup Instructions](#setup-instructions)
 - [Prerequisites](#prerequisties)
 - [Endpoints](#endpoints)
-- [Understanding Backup Schemes](understanding-backup-schemes)
-- [bash_scripts Overview](bash-scripts-overview)
-- [Dependencies](dependencies)
+- [Understanding Backup Schemes](#understanding-backup-schemes)
+- [bash_scripts Overview](#bash-scripts-overview)
+- [Dependencies](#dependencies)
+- [Simple API with Docker and MySQL](#simple-api-with-docker-and-mysql)
 - [License](#license)
 
 ---
@@ -315,12 +316,12 @@ docker-compose up --build -d
 
 ### 3. Tag your Image
 
-You can tag your local image with your Docker Hub username.
+- You can tag your local image with your Docker Hub username.
 
 ```bash
 docker tag assign-api oscar1210/assign-api
 ```
-OR If you want to tag it with a version (recommended), do this instead
+- OR If you want to tag it with a version (recommended), do this instead
 
 ```bash
 docker tag assign-api oscar1210/assign-api:latest
@@ -343,7 +344,7 @@ docker pull oscar1210/assign-api
 docker run -p 5000:5000 oscar1210/assign-api
 ```
 
-The Docker image is available on Docker Hub:
+- The Docker image is available on Docker Hub:
 
 [Click here to view/download the Docker image](https://hub.docker.com/r/oscar1210/assign-api)
 
