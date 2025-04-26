@@ -239,7 +239,9 @@ This project demonstrates how to containerize a simple Node.js API using Docker 
 
 - `/students`
 - `/subjects`
-
+  
+NOTE: Always ensure XAMPP control panel is open and MySQL is started during your project lifespan
+  
 ## 🐳 Docker Setup
 
 ### 1. Build Docker Image
