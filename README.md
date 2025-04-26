@@ -308,13 +308,44 @@ docker-compose up --build -d
 - TCP 3306 (if you want DB exposed—optional)
 
 ## 🐙 Docker Hub
-The Docker image is available on Docker Hub:
--link required
+
+### 1. Create account to Docker Hub (https://hub.docker.com/)
+
+### 2. Login to Docker Hub
+
+### 3. Tag your Image
+
+You can tag your local image with your Docker Hub username.
+
+```bash
+docker tag assign-api oscar1210/assign-api
+```
+OR If you want to tag it with a version (recommended), do this instead
+
+```bash
+docker tag assign-api oscar1210/assign-api:latest
+```
+
+### 4. Push the image to Docker Hub
+
+```bash
+docker push oscar1210/assign-api
+```
+- Or with version:
+
+```bash
+docker push oscar1210/assign-api:latest
+```
+### 5. To pull and run
 
 ```bash
 docker pull oscar1210/assign-api
 docker run -p 5000:5000 oscar1210/assign-api
 ```
+
+The Docker image is available on Docker Hub:
+
+[Click here to view/download the Docker image](https://hub.docker.com/r/oscar1210/assign-api)
 
 ## 🐞 Troubleshooting Tips
 - Make sure MySQL has finished starting before the API attempts to connect.
