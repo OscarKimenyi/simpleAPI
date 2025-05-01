@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules
+npm-debug.log
+
+# Git files
+.git
+.gitignore
+
+# Frontend build cache
+frontend/node_modules
+frontend/build
+frontend/.next
+frontend/dist
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode
+.idea
+
+# Logs and archives
+*.log
+*.zip

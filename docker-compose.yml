@@ -27,5 +27,33 @@ services:
       DB_PASS: rootpassword
       DB_NAME: cs421
 
+  frontend1:
+    build: ./frontend
+    container_name: frontend1
+    restart: always
+
+  frontend2:
+    build: ./frontend
+    container_name: frontend2
+    restart: always
+
+  frontend3:
+    build: ./frontend
+    container_name: frontend3
+    restart: always
+
+  loadbalancer:
+    image: nginx:alpine
+    container_name: nginx-loadbalancer
+    ports:
+      - "80:80"
+    volumes:
+      - ./loadbalancer/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend1
+      - frontend2
+      - frontend3
+
 volumes:
   mysql-data:
+
