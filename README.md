@@ -358,5 +358,61 @@ docker logs assign-api
 ```
 - Use docker exec -it mysql-db bash and mysql -u root -p to access the MySQL container.
 
+# High Availability Front-End with Load Balancer
+
+
+## Project Overview
+
+This project enhances a Node.js API by:
+- Adding a Dockerized React front-end
+- Implementing a high-availability (HA) architecture using **NGINX** as a load balancer
+- Deploying on an AWS EC2 instance
+
+## Components
+
+- **API**: Node.js + Express, exposing `/students` and `/subjects`
+- **Database**: MySQL 5.7
+- **Front-End**: React (3 instances)
+- **Load Balancer**: NGINX (round-robin)
+
+## Getting Started
+
+### Requirements
+
+- Docker
+- Docker Compose
+- AWS EC2 Ubuntu instance
+
+### Build & Run Locally
+
+```bash
+docker-compose up --build
+```
+Open your browser at http://localhost or http://51.20.34.197 to access the load-balanced front-end.
+
+### Test API
+
+- Click Students → Fetches from /students
+
+- Click Courses → Fetches from /subjects
+
+- Refresh homepage to see rotating X-Node-ID (e.g., frontend1, frontend2, frontend3)
+
+## Load Balancer Details
+
+- Tool: NGINX
+
+- Algorithm: Round-Robin
+
+- Health Checks: Manual test via stopping a container
+
+- Custom Header: X-Node-ID shows the responding frontend node
+
+## NGINX Config Path
+
+```bash
+loadbalancer/nginx.conf
+```
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.   
