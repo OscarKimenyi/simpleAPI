@@ -414,6 +414,8 @@ NGINX as a Load Balancer
 
 - Health Checks: Configured using proxy_next_upstream directive to skip unhealthy instances
 
+Details inside loadbalancer/nginx.conf
+
 Run Load Balancer
 
 ```bash
