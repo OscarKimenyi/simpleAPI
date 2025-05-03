@@ -17,6 +17,7 @@ The API is deployed on an AWS EC2 instance and is accessible publicly.
 - [bash_scripts Overview](#bash-scripts-overview)
 - [Dependencies](#dependencies)
 - [Simple API with Docker and MySQL](#simple-api-with-docker-and-mysql)
+- [Scalable Web Application with Docker and Load Balancer](#scalable-web-application-with-docker-and-load-balancer)
 - [License](#license)
 
 ---
@@ -33,7 +34,7 @@ This endpoint returns a list of students with their name and enrolled program.
 ...
 ]
 ```
-The /students endpoint can be accessed through [51.20.34.197/students](http://51.20.34.197/students)
+The /students endpoint can be accessed through [13.61.178.87/students](http://13.61.178.87/students)
 
 ### 2. /subjects
 This endpoint returns a list of subjects for the Software Engineering program, categorized by academic year.
@@ -46,7 +47,7 @@ This endpoint returns a list of subjects for the Software Engineering program, c
     ...
   ]
 ```
-The /subjects endpoint can be accessed through [51.20.34.197/subjects](http://51.20.34.197/subjects)
+The /subjects endpoint can be accessed through [13.61.178.87/subjects](http://13.61.178.87/subjects)
 
 ### Setup Instructions
 ### Prerequisites:
@@ -288,7 +289,7 @@ http://localhost:5000/subjects
 ### 2. SSH into your instance:
 
 ```bash
-ssh -i kim.pem ubuntu@51.20.34.197
+ssh -i kim.pem ubuntu@13.61.178.87 
 ```
 
 ### 3. Install Docker and Docker Compose:
@@ -360,61 +361,111 @@ docker logs assign-api
 ```
 - Use docker exec -it mysql-db bash and mysql -u root -p to access the MySQL container.
 
-# High Availability Front-End with Load Balancer
+---
 
 
-## Project Overview
+# Scalable Web Application with Docker and Load Balancer
 
-This project enhances a Node.js API by:
-- Adding a Dockerized React front-end
-- Implementing a high-availability (HA) architecture using **NGINX** as a load balancer
-- Deploying on an AWS EC2 instance
+This project demonstrates a scalable front-end and back-end architecture using Docker containers, an NGINX load balancer with round-robin algorithm, and deployment on AWS EC2.
 
-## Components
+---
 
-- **API**: Node.js + Express, exposing `/students` and `/subjects`
-- **Database**: MySQL 5.7
-- **Front-End**: React (3 instances)
-- **Load Balancer**: NGINX (round-robin)
+## 📦 Dockerized Setup Overview
 
-## Getting Started
+- **Frontend**: React-based application (three containers)
+- **Backend**: Flask API (one container)
+- **Load Balancer**: NGINX (containerized, round-robin with health checks)
+- **Database**: MySQL 5.7 (containerized)
 
-### Requirements
+---
 
-- Docker
-- Docker Compose
-- AWS EC2 Ubuntu instance
+## 🚀 Getting Started
 
-### Build & Run Locally
+### 1. Clone the Repository
 
 ```bash
-docker-compose up --build
+git clone https://github.com/OscarKimenyi/simpleAPI.git
+cd simpleAPI
 ```
-Open your browser at http://localhost or http://51.20.34.197 to access the load-balanced front-end.
 
-### Test API
+## 🛠️ Build and Run Front-End Containers
 
-- Click Students → Fetches from /students
-
-- Click Courses → Fetches from /subjects
-
-- Refresh homepage to see rotating X-Node-ID (e.g., frontend1, frontend2, frontend3)
-
-## Load Balancer Details
-
-- Tool: NGINX
-
-- Algorithm: Round-Robin
-
-- Health Checks: Manual test via stopping a container
-
-- Custom Header: X-Node-ID shows the responding frontend node
-
-## NGINX Config Path
+Step-by-step Instructions
+### 1. Build the frontend image:
 
 ```bash
-loadbalancer/nginx.conf
+docker build -t oscar1210/assignment4-frontend ./frontend
 ```
+### 2. Run three frontend containers:
+
+```bash
+docker run -d --name frontend1 oscar1210/assignment4-frontend
+docker run -d --name frontend2 oscar1210/assignment4-frontend
+docker run -d --name frontend3 oscar1210/assignment4-frontend
+```
+
+## ⚖️ Load Balancer Configuration
+
+NGINX as a Load Balancer
+- Algorithm: Round-robin
+
+- Health Checks: Configured using proxy_next_upstream directive to skip unhealthy instances
+
+Sample NGINX Config (inside /nginx/nginx.conf):
+
+
+Run Load Balancer
+
+```bash
+docker build -t oscar1210/assignment4-loadbalancer ./nginx
+docker run -d --name loadbalancer -p 80:80 --link frontend1 --link frontend2 --link frontend3 oscar1210/assignment4-loadbalancer
+```
+
+## ☁️ Deploying on AWS EC2
+### 1. Launch EC2 Instance (Ubuntu 20.04)
+
+### 2. Update and install Docker:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install docker.io docker-compose -y
+sudo usermod -aG docker $USER && newgrp docker
+```
+### 3. Clone your repository:
+
+```bash
+git clone https://github.com/OscarKimenyi/simpleAPI.git
+cd simpleAPI
+```
+### 4. Start all services with Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+Make sure port 80 and 5000 are open in your EC2 Security Group settings
+
+
+## 🧰 Troubleshooting
+
+Problem 1: Frontend not loading	                                                    
+Solution: Ensure all frontend containers are running (docker ps)       
+
+Problem 2: Load balancer gives gateway error	
+Solution:  Make sure frontend containers are --linked or in same Docker network
+
+Problem 3: MySQL port conflict	     
+Solution: Stop other MySQL instances (sudo systemctl stop mysql) or remap port
+
+Problem 4: Header not appearing	                                   
+Solution: Check the NGINX config and container logs for frontend1, 2, 3
+
+Problem 5: Port 80 already in use	                                 
+Solution: Stop conflicting services (sudo lsof -i :80) and re-run load balancer
+
+Problem 6: Accessing via browser fails	                             
+Solution: Use public IPv4 of EC2, ensure port 80 is open in Security Group
+
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.   
